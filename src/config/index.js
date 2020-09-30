@@ -9,8 +9,6 @@ const config = {
   pgPassword: process.env.PGPASSWORD,
   pgPort: process.env.PGPORT,
   jwtToken: process.env.TOKEN_KEY,
-
-  
 }
 
 module.exports = { config }

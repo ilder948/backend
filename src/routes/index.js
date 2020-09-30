@@ -1,12 +1,12 @@
-const {Router} = require('express')
-const passport = require('passport')
-
+const { Router } = require('express')
 const router = Router()
 
 const { getUser, createUser } = require('../components/user.controller')
+const { Login } = require('../components/auth.controller')
+
 
 router.get('/users', getUser)
 router.post('/users', createUser)
-router.post('/login', passport.authenticate('local') )
+router.post('/login', require('../components/auth.controller'))
 
 module.exports = router

@@ -1,32 +1,56 @@
 const bcrypt = require('bcrypt')
-const pool = require('../database/index')
+const User = require('../database/index')
 
 
-const getUser = async (req, res) => {
-  const users = await pool.query('SELECT * FROM users')
-  res.status(200).json(users.rows) 
+
+const getUser = (req, res) => {
+  const users = User.findAll()
+  console.log(users);
+  res.status(200).json(users)
 }
 
 
-const createUser = async (req, res) => {
+const createUser = (req, res) => {
   try {
-    const { firstname, lasname, email, age, country } = req.body
-    const password = await bcrypt.hash(req.body.password, 10)
-    console.log(password);
-    const user = await pool.query(
-      'INSERT INTO users (firstname, lasname, email, password, age, country) VALUES ($1, $2, $3, $4, $5, $6)',[firstname, lasname, email, password, age, country])
-    res.json({
-      message: 'User Create',
-      body: {
-        user: {email}
-      }
-    }).status(201)
+    User.create({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      password: req.body.password,
+      country: req.body.country,
+      age: req.body.age
+    }).then(user => {
+      res.json(user);
+    });
   } catch (error) {
-    console.log(error)
-    res.json(`Error ${error.detail}`)
+    res.json(error);
   }
-
 }
+
+
+
+// const createUser = async (req, res) => {
+//   try {
+//     const { firstname, lastname, email, age, country } = req.body
+//     const password = await bcrypt.hash(req.body.password, 10)
+//     console.log(password);
+//     const user = await User.create({
+//       firstname: firstname,
+//       lastname: lastname,
+//       email: email,
+//       age: age,
+//       country: country
+//     })
+//     res.json({
+//       message: 'User Create',
+//       body: user
+//     }).status(201)
+//   } catch (error) {
+//     console.log(error)
+//     res.json(`Error ${error.detail}`)
+//   }
+
+// }
 
 module.exports = {
   getUser,
