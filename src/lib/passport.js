@@ -1,48 +1,59 @@
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-const bcrypt = require('bcrypt'),
-const User = require('../model/models')
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const Users = require('../model/user');
+const passportJWT = require("passport-jwt");
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+const { config } = require('../config/index')
+const { Op } = require("sequelize");
 
-module.exports = function (app) {
-  app.use(passport.initialize())
-  app.use(passport.session())
-  passport.use(new LocalStrategy(
-    function (username, password, done) {
-      User.findAll({
-        where: {
-          'username': username
-        }
-      }).then(function (user) {
-        if (user == null) {
-          return done(null, false, { message: 'Incorrect credentials.' })
-        }
-
-        var hashedPassword = bcrypt.hashSync(password, user.salt)
-
-        if (user.password === hashedPassword) {
-          return done(null, user)
-        }
-
-        return done(null, false, { message: 'Incorrect credentials.' })
-      })
-    }
-  ))
-
-  passport.serializeUser(function (user, done) {
-    done(null, user.id)
-  })
-
-  passport.deserializeUser(function (id, done) {
-    Model.User.findOne({
+passport.use('local-auth', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password'
+},
+  async function (email, password, cb) {
+    return Users.findOne({
       where: {
-        'id': id
+        email: {
+          [Op.eq]: email
+        }
       }
-    }).then(function (user) {
-      if (user == null) {
-        done(new Error('Wrong user id.'))
+    }).then(user => {
+      if (user) {
+        bcrypt.compare(password, user.password).then(result => {
+          if (result) {
+            return cb(null, user.toJSON(), { message: 'Logged In Successfully' });
+          } else
+            return cb(null, false, { message: 'Incorrect email or password.' });
+        });
+      } else {
+        return cb(null, false, { message: 'Incorrect email or password.' });
       }
+    }).catch(err => cb(err));
+  }
+));
 
-      done(null, user)
+
+
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.jwtToken
+},
+  function (jwtPayload, cb) {
+    return Users.findOne({
+      where: {
+        id: {
+          [Op.eq]: jwtPayload._id
+        }
+      }
+    }).then(user => {
+      user.alfToken = jwtPayload.alfToken;
+      return cb(null, user);
     })
-  })
-}
+      .catch(err => {
+        return cb(err);
+      });
+  }
+));
+module.export = passport;

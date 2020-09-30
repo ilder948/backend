@@ -3,6 +3,10 @@ const app = express()
 const morgan = require('morgan')
 const { config } = require('./src/config/index')
 const sequelize = require('./src/database/index')
+const passport = require('passport')
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use(express.json({ extended: true }))
@@ -10,6 +14,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
 app.use(require('./src/routes/index'));
+app.use(require('./src/components/auth.controller'));
 
 
 app.listen(config.port, () => {
