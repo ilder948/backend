@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize')
+const { Model } = require('sequelize').Model
 const { sequelize } = require('../database/index')
 
 class User extends Model { }

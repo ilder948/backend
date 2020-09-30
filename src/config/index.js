@@ -9,6 +9,10 @@ const config = {
   pgPassword: process.env.PGPASSWORD,
   pgPort: process.env.PGPORT,
   jwtToken: process.env.TOKEN_KEY,
+
+  //rapi Api
+  keyRapidApi: process.env.KEY_RAPIDAPI
+
 }
 
 module.exports = { config }
