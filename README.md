@@ -1,6 +1,33 @@
 # Service 
 
 
+### REGISTER
+
+> POST
+
+```http://localhost:4000/```
+
+>Body
+
+```json
+  {
+        "firstname": "Juan",
+        "lastname": "Sanchez",
+        "email": "juanCarlos@yahoo.com.pa",
+        "password": "123456"
+    }
+
+```
+
+> Response 
+```json
+    { 
+      message: 'User successfully registered' 
+    }
+
+```
+
+
 ### GET PRODUCTS 
 
  > GET

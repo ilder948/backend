@@ -2,10 +2,7 @@ const Sequelize = require('sequelize')
 const sequelize = require('../database')
 
 const Products = sequelize.define('Digitalife', {
-  id: {
-    type: Sequelize.NUMBER,
-    primaryKey: true
-  },
+
   url: {
     type: Sequelize.STRING,
   },

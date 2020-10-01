@@ -3,14 +3,13 @@ const router = Router()
 const { getUser, createUser } = require('../components/user.controller')
 const { getProductsDb } = require('../components/search')
 const passport = require('passport');
-const Login = require('../components/auth.controller')
+const { Login, Register } = require('../components/auth.controller')
 
 router.post('/login', Login)
+router.post('/register', Register)
 router.get('/users', passport.authenticate('jwt', { session: false }), getUser)
 router.post('/users', passport.authenticate('jwt', { session: false }), createUser)
-router.get('/search', passport.authenticate('jwt', { session: false }), getProductsDb)
+router.get('/search', getProductsDb)
 
 
 module.exports = router;
-
-

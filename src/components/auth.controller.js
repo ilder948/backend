@@ -7,7 +7,6 @@ const passport = require('passport')
 const passportJWT = require('passport-jwt');
 const { config } = require('../config/index')
 const { Op } = require("sequelize");
-
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
 
@@ -15,17 +14,22 @@ const jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = config.jwtToken
 
-
 const strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
   console.log('payload received', jwt_payload);
-  const user = getUser({ id: jwt_payload.id });
+  const user = Users.findOne({
+    where: {
+      id: {
+        [Op.eq]: jwt_payload.id
+      }
+    }
+
+  });
   if (user) {
     next(null, user);
   } else {
     next(null, false);
   }
 });
-
 passport.use(strategy);
 
 const Login = async function (req, res) {
@@ -51,9 +55,28 @@ const Login = async function (req, res) {
     } else {
       res.json('User or password incorrect')
     }
-
-
   }
 };
 
-module.exports = Login
+const Register = async (req, res) => {
+  try {
+    const password = await bcrypt.hash(req.body.password, 10)
+    const user = await Users.create({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      password: password,
+      country: req.body.country,
+      age: req.body.age
+    }).then(user => {
+      res.json({ message: 'User successfully registered' });
+    });
+  } catch (error) {
+    res.json({
+      error: error.errors[0].message,
+    });
+  }
+}
+
+
+module.exports = { Login, Register }
