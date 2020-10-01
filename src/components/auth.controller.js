@@ -1,30 +1,59 @@
-const express = require('express');
-const router = express.Router();
+
+
+const bcrypt = require('bcrypt')
+const { Users } = require('../model/user')
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const config = require('../config/index')
+const passport = require('passport')
+const passportJWT = require('passport-jwt');
+const { config } = require('../config/index')
+const { Op } = require("sequelize");
 
-/* POST login. */
-router.post('/login', function (req, res, next) {
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
 
-  console.log('Aqui')
+const jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = config.jwtToken
 
-  passport.authenticate('local-auth', { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(400).json({
-        message: 'Something is not right',
-        user: user
-      });
-    }
-    req.login(user, { session: false }, (err) => {
-      if (err) {
-        next(err);
-      }
-      const token = jwt.sign(user, config.jwtToken);
-      return res.json({ user, token });
-    });
-  })(req, res);
 
+const strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
+  console.log('payload received', jwt_payload);
+  const user = getUser({ id: jwt_payload.id });
+  if (user) {
+    next(null, user);
+  } else {
+    next(null, false);
+  }
 });
 
-module.exports = router;
+passport.use(strategy);
+
+const Login = async function (req, res) {
+  const { email, password } = req.body;
+  if (email && password) {
+    const user = await Users.findOne({
+      where: {
+        email: {
+          [Op.eq]: email
+        }
+      }
+    });
+    if (!user) {
+      res.status(401).json({ message: 'No such user found' });
+      return
+    }
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
+      const payload = { id: user.id };
+      const token = jwt.sign(payload, jwtOptions.secretOrKey);
+      res.json({ status: 200, token: token });
+      return
+    } else {
+      res.json('User or password incorrect')
+    }
+
+
+  }
+};
+
+module.exports = Login

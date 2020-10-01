@@ -2,13 +2,13 @@ const { Router } = require('express')
 const router = Router()
 const { getUser, createUser } = require('../components/user.controller')
 const { getProductsDb } = require('../components/search')
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const { config } = require('../config/index')
+const Login = require('../components/auth.controller')
 
-router.get('/users', getUser)
-router.post('/users', createUser)
-router.get('/search', getProductsDb)
+router.post('/login', Login)
+router.get('/users', passport.authenticate('jwt', { session: false }), getUser)
+router.post('/users', passport.authenticate('jwt', { session: false }), createUser)
+router.get('/search', passport.authenticate('jwt', { session: false }), getProductsDb)
 
 
 module.exports = router;
