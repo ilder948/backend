@@ -21,7 +21,6 @@ const getUser = async (req, res) => {
 
 }
 
-
 const createUser = async (req, res) => {
   try {
     const password = await bcrypt.hash(req.body.password, 10)
@@ -41,6 +40,7 @@ const createUser = async (req, res) => {
     });
   }
 }
+
 
 
 

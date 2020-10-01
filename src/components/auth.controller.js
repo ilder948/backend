@@ -60,17 +60,21 @@ const Login = async function (req, res) {
 
 const Register = async (req, res) => {
   try {
-    const password = await bcrypt.hash(req.body.password, 10)
-    const user = await Users.create({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      password: password,
-      country: req.body.country,
-      age: req.body.age
-    }).then(user => {
-      res.json({ message: 'User successfully registered' });
-    });
+    if (!req.body.password || !req.body.email) {
+      res.json({ error: 'Email and password is requerid' })
+    } else {
+      const password = await bcrypt.hash(req.body.password, 10)
+      const user = await Users.create({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        password: password,
+        country: req.body.country,
+        age: req.body.age
+      }).then(user => {
+        res.json({ message: 'User successfully registered' });
+      });
+    }
   } catch (error) {
     res.json({
       error: error.errors[0].message,
