@@ -29,8 +29,7 @@ const createUser = async (req, res) => {
       lastname: req.body.lastname,
       email: req.body.email,
       password: password,
-      country: req.body.country,
-      age: req.body.age
+
     }).then(user => {
       res.json(user);
     });

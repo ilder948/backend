@@ -19,12 +19,6 @@ const Users = sequelize.define('users', {
     allowNull: true,
     defaultValue: '',
     allowNull: false
-  },
-  country: {
-    type: Sequelize.STRING
-  },
-  age: {
-    type: Sequelize.NUMBER
   }
 }, {
   freezeTableName: true,

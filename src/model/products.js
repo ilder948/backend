@@ -1,20 +1,30 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../database')
 
-const Products = sequelize.define('Digitalife', {
+const Products = sequelize.define('Products', {
 
+  name: {
+    type: Sequelize.STRING,
+  },
+  external_id: {
+    type: Sequelize.STRING,
+  },
+  store_id: {
+    type: Sequelize.STRING
+  },
   url: {
     type: Sequelize.STRING,
   },
   price: {
     type: Sequelize.FLOAT,
   },
-  name: {
-    type: Sequelize.STRING,
-  },
-  img: {
+  image_url: {
     type: Sequelize.STRING
+  },
+  active: {
+    type: Sequelize.BOOLEAN
   }
+
 }, {
   freezeTableName: true,
 })

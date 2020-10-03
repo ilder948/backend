@@ -1,26 +1,27 @@
 const { Products } = require('../model/products')
-const { Doto } = require('../model/doto')
 const Op = require('sequelize').Op
 const { Sequelize } = require('sequelize')
+const { userProducts } = require('./latestSearch.controller')
 
 const getProductsDb = async (req, res) => {
   const query = req.query.query
-
-  if (query.length < 3) {
+  const user_id = req.query.user_id
+  userProducts(user_id, query)
+  if (query.length < 2) {
     res.json({
-      error: 'enter more than 3 characters'
+      error: 'enter more than 2 characters'
     })
   }
 
   try {
-    const data = await Doto.findAll({
+    const data = await Products.findAll({
       order: [
         'price'
       ],
       limit: 30,
       where: {
         name: {
-          [Op.substring]: query
+          [Op.iRegexp]: query
         }
       }
     })
