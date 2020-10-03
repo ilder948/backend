@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "backend-inteligent-tourism",
+    "name": "backend-tech",
     "builds": [
       {
         "use": "@vercel/node",

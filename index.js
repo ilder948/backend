@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const { config } = require('./src/config/index')
 const sequelize = require('./src/database/index')
 const passport = require('passport')
+const cors = require('cors')
 
 // use the strategy
 app.use(passport.initialize());

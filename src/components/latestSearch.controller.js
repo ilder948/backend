@@ -6,15 +6,19 @@ const { random } = require('../database')
 const sequelize = require('../database')
 
 const userProducts = async (user_id, query) => {
-  console.log(query, user_id)
-  try {
-    await latestSearch.create({
-      user_id: user_id,
-      query: query,
-    })
-  } catch (error) {
-    console.log(error)
+  if (user_id) {
+    try {
+      await latestSearch.create({
+        user_id: user_id,
+        query: query,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    console.log('No register en database')
   }
+
 }
 
 const recommendations = async (req, res) => {

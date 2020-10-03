@@ -9,7 +9,7 @@ const getProductsDb = async (req, res) => {
   userProducts(user_id, query)
   if (query.length < 2) {
     res.json({
-      error: 'enter more than 2 characters'
+      error: 'Enter more than 2 characters'
     })
   }
   debugger
