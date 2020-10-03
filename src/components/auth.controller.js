@@ -1,7 +1,7 @@
 
 
 const bcrypt = require('bcrypt')
-const { Users } = require('../model/user')
+const { Users } = require('../model/users')
 const jwt = require('jsonwebtoken');
 const passport = require('passport')
 const passportJWT = require('passport-jwt');
@@ -43,7 +43,7 @@ const Login = async function (req, res) {
       }
     });
     if (!user) {
-      res.status(401).json({message: 'No such user found'});
+      res.status(401).json({ message: 'No such user found' });
       return
     }
     const result = await bcrypt.compare(password, user.password);
@@ -65,12 +65,12 @@ const Register = async (req, res) => {
     } else {
       const password = await bcrypt.hash(req.body.password, 10)
       const user = await Users.create({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        first_name: req.body.firstname,
+        last_name: req.body.lastname,
         email: req.body.email,
         password: password,
-        country: req.body.country,
-        age: req.body.age
+//        country_id: req.body.country,
+//        age: req.body.age
       }).then(user => {
         res.json({ message: 'User successfully registered' });
       });
