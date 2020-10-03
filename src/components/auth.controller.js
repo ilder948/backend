@@ -43,7 +43,7 @@ const Login = async function (req, res) {
       }
     });
     if (!user) {
-      res.status(401).json({ message: 'No such user found' });
+      res.status(401).json({message: 'No such user found'});
       return
     }
     const result = await bcrypt.compare(password, user.password);
