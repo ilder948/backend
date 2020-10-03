@@ -1,5 +1,5 @@
-const { Products } = require('../model/products')
 const { Doto } = require('../model/doto')
+//const { Products } = require('../model/products')
 const Op = require('sequelize').Op
 const { Sequelize } = require('sequelize')
 
@@ -11,7 +11,7 @@ const getProductsDb = async (req, res) => {
       error: 'enter more than 3 characters'
     })
   }
-
+debugger
   try {
     const data = await Doto.findAll({
       order: [
