@@ -75,6 +75,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linuxBackend_PM
 
 
-./node_modules/
-./jspm_packages/
-./vercel
+/node_modules/
+/jspm_packages/
+/vercel
