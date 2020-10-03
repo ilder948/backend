@@ -12,7 +12,7 @@ const getProductsDb = async (req, res) => {
       error: 'enter more than 2 characters'
     })
   }
-
+  debugger
   try {
     const data = await Products.findAll({
       order: [

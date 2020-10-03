@@ -1,19 +1,10 @@
+// Node modules
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const { config } = require('./src/config/index')
 const sequelize = require('./src/database/index')
 const passport = require('passport')
-const cors = require('cors')
-
-
-
-const corsOptions = {
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204
-}
 
 // use the strategy
 app.use(passport.initialize());
@@ -21,13 +12,11 @@ app.use(passport.session());
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors(corsOptions))
 
-
-
-
+//App routes use 
 app.use(require('./src/routes/index'),);
 
+//App endpoint
 app.listen(config.port, () => {
   console.log(`Server Run In ${config.host}:${config.port}`)
   sequelize.authenticate().then(() => {

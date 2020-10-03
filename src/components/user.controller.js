@@ -1,8 +1,6 @@
 const bcrypt = require('bcrypt');
-const user = require('../model/user');
-const { Users } = require('../model/user')
-
-
+//const user = require('../model/user');
+const { Users } = require('../model/users')
 
 const getUser = async (req, res) => {
   try {
@@ -18,18 +16,16 @@ const getUser = async (req, res) => {
       error: e.message
     })
   }
-
 }
 
 const createUser = async (req, res) => {
   try {
     const password = await bcrypt.hash(req.body.password, 10)
     const user = await Users.create({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
+      first_name: req.body.firstname,
+      last_name: req.body.lastname,
       email: req.body.email,
       password: password,
-
     }).then(user => {
       res.json(user);
     });
@@ -39,9 +35,6 @@ const createUser = async (req, res) => {
     });
   }
 }
-
-
-
 
 module.exports = {
   getUser,

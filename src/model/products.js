@@ -2,7 +2,6 @@ const Sequelize = require('sequelize')
 const sequelize = require('../database')
 
 const Products = sequelize.define('Products', {
-
   name: {
     type: Sequelize.STRING,
   },
@@ -10,7 +9,7 @@ const Products = sequelize.define('Products', {
     type: Sequelize.STRING,
   },
   store_id: {
-    type: Sequelize.STRING
+    type: Sequelize.INTEGER,
   },
   url: {
     type: Sequelize.STRING,
